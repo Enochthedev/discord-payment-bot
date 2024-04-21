@@ -1,0 +1,77 @@
+name: Run Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Jest tests
+        run: npm test    
+
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v2
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     file: ./coverage/lcov.info
+      #     flags: unittests
+      #     name: codecov-umbrella
+      #     fail_ci_if_error: true
+          
+      # - name: send slack notification
+      #   uses: rtCamp/action-slack-notify@v2
+      #   with:
+      #     status: ${{ job.status }}
+      #     author_name: ${{ github.actor }}
+      #     author_icon: ${{ github.actor }}
+      #     title: ${{ job.status }}
+      #     text: ${{ job.status }}
+      #     fields: coverage
+      #     fields: unittests
+      #     fields: codecov-umbrella
+      #     slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      # - name: send discord notification
+      #   uses: appleboy/discord-action@master
+      #   with:
+      #     webhook_id: ${{ secrets.DISCORD_WEBHOOK_ID }}
+      #     webhook_token: ${{ secrets.DISCORD_WEBHOOK_TOKEN }}
+      #     color: ${{ job.status }}
+      #     title: ${{ job.status }}
+      #     description: ${{ job.status }}
+      #     fields: coverage
+      #     fields: unittests
+      #     fields: codecov-umbrella
+
+      # - name: send email notification
+      #   uses: dawidd6/action-send-mail@v2
+      #   with:
+      #     server_address: smtp.gmail.com
+      #     server_port: 587
+      #     username: ${{ secrets.EMAIL }}
+      #     password: ${{ secrets.EMAIL_PASSWORD }}
+      #     subject: ${{ job.status }}
+      #     body: ${{ job.status }}
+      #     to: ${{ secrets.EMAIL }}
+      #     from: ${{ secrets.EMAIL }}
+
